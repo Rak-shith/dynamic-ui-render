@@ -5,7 +5,9 @@ const ProfileCard = ({ applicant }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+        
+        {/* Avatar + Name Section */}
         <div className="flex items-center space-x-4">
           <div className="w-12 h-12 rounded-full bg-gray-300 overflow-hidden flex-shrink-0">
             {avatar ? (
@@ -21,17 +23,18 @@ const ProfileCard = ({ applicant }) => {
             )}
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">{name}</h2>
-            <p className="text-sm text-gray-600">{phone}</p>
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900">{name}</h2>
+            <p className="text-sm text-gray-600 break-words">{phone}</p>
           </div>
         </div>
-        
-        <div className="flex space-x-8">
-          <div className="text-right">
+
+        {/* Application + Customer IDs */}
+        <div className="flex flex-col sm:flex-row sm:space-x-8 space-y-2 sm:space-y-0 text-left sm:text-right">
+          <div>
             <p className="text-xs text-gray-500 uppercase tracking-wide">Application ID</p>
             <p className="text-sm font-medium text-gray-900">{applicationId}</p>
           </div>
-          <div className="text-right">
+          <div>
             <p className="text-xs text-gray-500 uppercase tracking-wide">Customer ID</p>
             <p className="text-sm font-medium text-gray-900">{customerId}</p>
           </div>

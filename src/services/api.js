@@ -365,6 +365,14 @@ const MOCK_DROPDOWN_OPTIONS = {
   ]
 };
 
+export const APPLICATION_DATA_PROFILE = {
+  name: "Ganesh Jange",
+  phone: "+91 9769797997",
+  applicationId: "ISFL000001067",
+  customerId: "NA",
+  avatar: null
+};
+
 // Create axios instance
 const api = axios.create({
   // baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:3001/api',
@@ -416,6 +424,21 @@ export const fetchConfig = async () => {
     throw new Error('Failed to fetch configuration');
   }
 };
+
+// export const fetchApplicationData = async () => {
+//   try {
+//     // For now, return mock data. Replace with actual API call later
+//     // const response = await api.get('/profile');
+//     // return response.data;
+    
+//     // Simulate API delay
+//     await new Promise(resolve => setTimeout(resolve, 500));
+//     return APPLICATION_DATA_PROFILE;
+//   } catch (error) {
+//     console.error('Error fetching config:', error);
+//     throw new Error('Failed to fetch configuration');
+//   }
+// };
 
 export const fetchDropdownOptions = async (apiKey) => {
   try {
