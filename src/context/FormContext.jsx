@@ -109,7 +109,7 @@ export const FormProvider = ({ children }) => {
   };
 
   const getFieldValue = (field) => {
-    return state.formData[field] || '';
+    return state.formData[field] !== undefined ? state.formData[field] : '';
   };
 
   const getFieldError = (field) => {

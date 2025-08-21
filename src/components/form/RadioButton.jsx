@@ -28,11 +28,11 @@ const RadioButton = ({ element, className = '' }) => {
                 id={`${element.apiKey}_${index}`}
                 name={element.apiKey}
                 type="radio"
-                value={option.value}
-                checked={value === option.value}
+                value={String(option.value)}
+                checked={String(value) === String(option.value)}
                 onChange={() => handleChange(option.value)}
                 disabled={isDisabled}
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 disabled:opacity-50"
+                className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 disabled:opacity-50"
               />
               <label
                 htmlFor={`${element.apiKey}_${index}`}
@@ -49,7 +49,7 @@ const RadioButton = ({ element, className = '' }) => {
       
       {/* Render restricted label details if option matches */}
       {element.restrictedLabelDetails && 
-       value === element.optionToRestrictDependents && 
+       String(value) === String(element.optionToRestrictDependents) && 
        element.restrictedLabelDetails.map((labelDetail, index) => (
         <div key={index} className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-md">
           <div className="flex">

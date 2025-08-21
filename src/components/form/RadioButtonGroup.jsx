@@ -2,14 +2,15 @@ import React from 'react';
 import { useForm } from '../../context/FormContext';
 
 const RadioButtonGroup = ({ element }) => {
-  const { formData, updateField, fieldErrors } = useForm();
+  const { getFieldValue, setFieldValue, getFieldError, setFieldTouched } = useForm();
   const { apiKey, label, validation, options = ['Yes', 'No', 'NA'] } = element;
   
-  const value = formData[apiKey] || '';
-  const error = fieldErrors[apiKey];
+  const value = getFieldValue(apiKey) || '';
+  const error = getFieldError(apiKey);
 
   const handleChange = (selectedValue) => {
-    updateField(apiKey, selectedValue);
+    setFieldValue(apiKey, selectedValue);
+    setFieldTouched(apiKey);
   };
 
   return (
@@ -25,14 +26,14 @@ const RadioButtonGroup = ({ element }) => {
             <input
               type="radio"
               name={apiKey}
-              value={option}
-              checked={value === option}
+              value={String(option)}
+              checked={String(value) === String(option)}
               onChange={() => handleChange(option)}
               className="sr-only"
             />
             <div className={`
               flex items-center justify-center w-12 h-8 rounded-md border-2 text-sm font-medium transition-all
-              ${value === option 
+              ${String(value) === String(option) 
                 ? 'border-orange-500 bg-orange-50 text-orange-700' 
                 : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
               }

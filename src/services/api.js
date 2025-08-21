@@ -29,22 +29,40 @@ const MOCK_CONFIG = {
                 },
                 "elements":[
                   {
-                    "component":"radioButton",
-                    "apiKey":"isWaNumberSame",
-                    "label":"Previously provide mobile number is same as whatsapp number",
-                    "type":"radio",
+                    "component":"textfield",
+                    "apiKey":"noOfYearsInCurrentAddress",
+                    "label":"No. Of Years at Current Address",
+                    "type":"number",
                     "api":null,
-                    "options":[
-                      {"label":"Yes","value":true},
-                      {"label":"No","value":false}
-                    ],
+                    "options":null,
                     "visible":true,
                     "autoFocus":false,
                     "prefix":null,
                     "optionToRenderDependentFields":null,
                     "dependentFields":null,
-                    "alwaysDisabled":false,
-                    "validation":{"required":true,"minLength":null,"maxLength":null}
+                    "validation":{
+                       "required":true,
+                       "minLength":null,
+                       "maxLength":3
+                    }
+                  },
+                  {
+                      "component":"textfield",
+                      "apiKey":"noOfMonthsInCurrentAddress",
+                      "label":"No. Of Months at Current Address",
+                      "type":"number",
+                      "api":null,
+                      "options":null,
+                      "visible":true,
+                      "autoFocus":false,
+                      "prefix":null,
+                      "optionToRenderDependentFields":null,
+                      "dependentFields":null,
+                      "validation":{
+                        "required":true,
+                        "minLength":null,
+                        "maxLength":5
+                      }
                   },
                   {
                     "component":"textfield",
@@ -212,7 +230,25 @@ const MOCK_CONFIG = {
                       }
                     ],
                     "validation":{"required":true,"minLength":null,"maxLength":null}
-                  }
+                  },
+                  {
+                    "component":"radioButton",
+                    "apiKey":"isWaNumberSame",
+                    "label":"Previously provide mobile number is same as whatsapp number",
+                    "type":"radio",
+                    "api":null,
+                    "options":[
+                      {"label":"Yes","value":true},
+                      {"label":"No","value":false}
+                    ],
+                    "visible":true,
+                    "autoFocus":false,
+                    "prefix":null,
+                    "optionToRenderDependentFields":null,
+                    "dependentFields":null,
+                    "alwaysDisabled":false,
+                    "validation":{"required":true,"minLength":null,"maxLength":null}
+                  },
                 ]
               },
               {
@@ -220,7 +256,32 @@ const MOCK_CONFIG = {
                 "sectionName":"KYC Details",
                 "fromPreviousStage":true,
                 "componentName":"KycDetails",
-                "elements": []
+                "webSectionAttributes":{
+                  "fetchApiEndPoint":"dde/v1/fetch-additional-details",
+                  "saveApiEndPoint":"dde/v1/save-or-update-additional-details",
+                  "validationSchema":{}
+                },
+                "elements": [
+                  {
+                    "component":"textAreaSmall",
+                    "apiKey":"fullAddress",
+                    "label":"Full Address",
+                    "type":"text",
+                    "api":null,
+                    "options":null,
+                    "visible":true,
+                    "autoFocus":false,
+                    "prefix":null,
+                    "optionToRenderDependentFields":null,
+                    "dependentFields":null,
+                    "alwaysDisabled":false,
+                    "validation":{
+                       "required":true,
+                       "minLength":null,
+                       "maxLength":null
+                    }
+                 }
+                ]
               },
               {
                 "rbackey":"bureau_report",
@@ -267,9 +328,13 @@ const MOCK_CONFIG = {
                     "prefix":null,
                     "optionToRenderDependentFields":null,
                     "dependentFields":null,
-                    "validation":{"required":true,"minLength":null,"maxLength":4}
-                  },
-                  {
+                    "validation":{
+                       "required":true,
+                       "minLength":null,
+                       "maxLength":4
+                    }
+                 },
+                 {
                     "component":"textfield",
                     "apiKey":"avgPerLitreMilkPrice",
                     "label":"Avg. Per Litre Milk Price",
@@ -281,9 +346,31 @@ const MOCK_CONFIG = {
                     "prefix":"₹",
                     "optionToRenderDependentFields":null,
                     "dependentFields":null,
-                    "validation":{"required":true,"minLength":null,"maxLength":3}
-                  },
-                  {
+                    "validation":{
+                       "required":true,
+                       "minLength":null,
+                       "maxLength":3
+                    }
+                 },
+                 {
+                    "component":"textfield",
+                    "apiKey":"vintageDairyBusinessMonths",
+                    "label":"Vintage In Dairy Business (In Months)",
+                    "type":"number",
+                    "api":null,
+                    "options":null,
+                    "visible":true,
+                    "autoFocus":false,
+                    "prefix":null,
+                    "optionToRenderDependentFields":null,
+                    "dependentFields":null,
+                    "validation":{
+                       "required":true,
+                       "minLength":null,
+                       "maxLength":5
+                    }
+                 },
+                 {
                     "component":"dropdown",
                     "apiKey":"milkPaymentFrequency",
                     "label":"Milk Payment Frequency",
@@ -295,8 +382,183 @@ const MOCK_CONFIG = {
                     "prefix":null,
                     "optionToRenderDependentFields":null,
                     "dependentFields":null,
-                    "validation":{"required":true,"minLength":null,"maxLength":null}
-                  }
+                    "validation":{
+                       "required":true,
+                       "minLength":null,
+                       "maxLength":null
+                    }
+                 },
+                 {
+                    "component":"dropdown",
+                    "apiKey":"proposedCattleType",
+                    "label":"Proposed Cattle Type",
+                    "type":"dropdown",
+                    "api":"Proposed Cattle Type",
+                    "options":null,
+                    "visible":true,
+                    "autoFocus":false,
+                    "prefix":null,
+                    "optionToRenderDependentFields":null,
+                    "dependentFields":null,
+                    "validation":{
+                       "required":true,
+                       "minLength":null,
+                       "maxLength":null
+                    }
+                 },
+                 {
+                    "component":"textfield",
+                    "apiKey":"noOfMilchingCattle",
+                    "label":"No Of Proposed Milching Cattle",
+                    "type":"number",
+                    "api":null,
+                    "options":null,
+                    "visible":true,
+                    "autoFocus":false,
+                    "prefix":null,
+                    "optionToRenderDependentFields":null,
+                    "dependentFields":null,
+                    "validation":{
+                       "required":true,
+                       "minLength":null,
+                       "maxLength":3
+                    }
+                 },
+                 {
+                    "component":"radioButton",
+                    "apiKey":"waterAvailability",
+                    "label":"Water Availability",
+                    "type":"radio",
+                    "api":null,
+                    "options":[
+                       {
+                          "label":"Yes",
+                          "value":true
+                       },
+                       {
+                          "label":"No",
+                          "value":false
+                       }
+                    ],
+                    "visible":true,
+                    "autoFocus":false,
+                    "prefix":null,
+                    "optionToRenderDependentFields":null,
+                    "dependentFields":null,
+                    "validation":{
+                       "required":false,
+                       "minLength":null,
+                       "maxLength":null
+                    }
+                 },
+                 {
+                    "component":"radioButton",
+                    "apiKey":"cattleEffectedByDisease1Y",
+                    "label":"Existing Cattle Affected By Any Disease In 1 Yr.",
+                    "type":"radio",
+                    "api":null,
+                    "options":[
+                       {
+                          "label":"Yes",
+                          "value":true
+                       },
+                       {
+                          "label":"No",
+                          "value":false
+                       }
+                    ],
+                    "visible":true,
+                    "autoFocus":false,
+                    "prefix":null,
+                    "optionToRenderDependentFields":null,
+                    "dependentFields":null,
+                    "validation":{
+                       "required":false,
+                       "minLength":null,
+                       "maxLength":null
+                    }
+                 },
+                 {
+                    "component":"radioButton",
+                    "apiKey":"insuranceForCattle",
+                    "label":"Insurance For Existing Cattle Done?",
+                    "type":"radio",
+                    "api":null,
+                    "options":[
+                       {
+                          "label":"Yes",
+                          "value":true
+                       },
+                       {
+                          "label":"No",
+                          "value":false
+                       }
+                    ],
+                    "visible":true,
+                    "autoFocus":false,
+                    "prefix":null,
+                    "optionToRenderDependentFields":null,
+                    "dependentFields":null,
+                    "validation":{
+                       "required":false,
+                       "minLength":null,
+                       "maxLength":null
+                    }
+                 },
+                 {
+                    "component":"radioButton",
+                    "apiKey":"cattleShed",
+                    "label":"Cattle shed Available?",
+                    "type":"radio",
+                    "api":null,
+                    "options":[
+                       {
+                          "label":"Yes",
+                          "value":true
+                       },
+                       {
+                          "label":"No",
+                          "value":false
+                       }
+                    ],
+                    "visible":true,
+                    "autoFocus":false,
+                    "prefix":null,
+                    "optionToRenderDependentFields":null,
+                    "dependentFields":null,
+                    "validation":{
+                       "required":false,
+                       "minLength":null,
+                       "maxLength":null
+                    }
+                 },
+                 {
+                    "component":"radioButton",
+                    "apiKey":"milkPaymentMode",
+                    "label":"Milk Payment Mode",
+                    "type":"radio",
+                    "api":null,
+                    "options":[
+                       {
+                          "label":"Cash",
+                          "value":"Cash"
+                       },
+                       {
+                          "label":"Bank",
+                          "value":"Bank"
+                       }
+                    ],
+                    "visible":true,
+                    "autoFocus":false,
+                    "prefix":null,
+                    "optionToRenderDependentFields":null,
+                    "dependentFields":null,
+                    "validation":{
+                       "required":true,
+                       "minLength":null,
+                       "maxLength":null
+                    }
+                 }
                 ]
               }
             ]
@@ -314,14 +576,19 @@ const MOCK_CONFIG = {
                 "componentName":null,
                 "elements":[
                   {
-                    "component":"LocationComponnet"
-                  },
-                  {
                     "component":"dynamicImages",
                     "apiKey":"House Picture",
                     "label":"House Picture",
-                    "type":"image"
-                  }
+                    "type":"image",
+                    "visible":true
+                  },
+                  {
+                    "component":"LocationComponnet",
+                    "apiKey":"currentLocation",
+                    "label":"Current Location",
+                    "visible":true,
+                    "validation":{"required":true,"minLength":null,"maxLength":null}
+                  },
                 ]
               }
             ]
