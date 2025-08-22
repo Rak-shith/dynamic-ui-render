@@ -97,7 +97,7 @@ const ComponentFactory = ({ element, className = '' }) => {
     if (!shouldRender) return null;
 
     return (
-      <div className="ml-6 mt-4 pl-4 border-l-2 border-gray-200">
+      <div className="ml-6 mt-4 pl-4 border-l-2 border-orange-200">
         {element.dependentFields.map((dependentElement, index) => (
           <ComponentFactory
             key={`${dependentElement.apiKey || index}`}

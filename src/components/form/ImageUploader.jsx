@@ -50,7 +50,7 @@ const ImageUploader = ({ element, className = '' }) => {
     width: '150px',
     height: '150px',
     borderRadius: '8px',
-    border: '2px solid #e5e7eb'
+    border: '2px solid #f97316'
   };
 
   return (

@@ -264,7 +264,7 @@ const MOCK_CONFIG = {
                 "elements": [
                   {
                     "component":"textAreaSmall",
-                    "apiKey":"fullAddress",
+                    "apiKey":"kyc_Address",
                     "label":"Full Address",
                     "type":"text",
                     "api":null,

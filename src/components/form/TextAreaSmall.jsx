@@ -24,7 +24,7 @@ const TextAreaSmall = ({ element, className = '' }) => {
   };
 
   return (
-    <div className={`mb-4 ${className}`}>
+    <div className={`w-full mb-4 ${className}`}>
       <label htmlFor={element.apiKey} className="form-label">
         {element.label}
         {element.validation?.required && <span className="text-red-500 ml-1">*</span>}

@@ -100,13 +100,27 @@ export const validateSection = (formData, elements) => {
 };
 
 export const shouldRenderDependentFields = (element, currentValue) => {
-  if (!element.dependentFields || !element.optionToRenderDependentFields) {
+  if (!element.dependentFields || element.optionToRenderDependentFields === null || element.optionToRenderDependentFields === undefined) {
     return false;
   }
 
   // For radio buttons and dropdowns, check if current value matches the trigger
   if (element.component === 'radioButton' || element.component === 'dropdown') {
-    return currentValue === element.optionToRenderDependentFields;
+    // Handle boolean values properly - convert both to same type for comparison
+    const triggerValue = element.optionToRenderDependentFields;
+    
+    // If trigger is boolean, compare as boolean
+    if (typeof triggerValue === 'boolean') {
+      return currentValue === triggerValue;
+    }
+    
+    // If trigger is string, convert current value to string for comparison
+    if (typeof triggerValue === 'string') {
+      return String(currentValue) === triggerValue;
+    }
+    
+    // Direct comparison for other types
+    return currentValue === triggerValue;
   }
 
   // For checkboxes, check if it's checked
