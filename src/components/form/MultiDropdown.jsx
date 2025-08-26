@@ -67,7 +67,7 @@ const MultiDropdown = ({ element, className = '' }) => {
           type="button"
           onClick={() => !isDisabled && !loading && setIsOpen(!isOpen)}
           disabled={isDisabled || loading}
-          className={`form-input text-left flex items-center justify-between ${
+          className={`form-input text-sm text-left flex items-center justify-between ${
             error ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
           }`}
         >

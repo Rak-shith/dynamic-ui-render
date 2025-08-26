@@ -1,778 +1,360 @@
 import axios from 'axios';
+import { CONFIG } from './config';
+import { MOCK_DATA } from './mockData';
+import { ApiError, NetworkError, ValidationError } from './errors';
+import logger from './logger';
 
-// Mock configuration data
-const MOCK_CONFIG = {
-   "status":"Success",
-   "successMessage":"DB details fetched Successfully",
-   "data":{
-      "page": {
-        "pageName": "Field Investigation",
-        "pageAttributes": {
-          "fetchApiEndPoint": "v1/fetch-api"
-        },
-        "tabs": [
-          {
-            "rbackey":"applicant",
-            "tabName":"Applicant",
-            "staticPage":false,
-            "profileCardData":true,
-            "sections":[
-              {
-                "rbackey":"additional_details",
-                "sectionName":"Additional Details",
-                "fromPreviousStage":true,
-                "componentName":null,
-                "webSectionAttributes":{
-                  "fetchApiEndPoint":"dde/v1/fetch-additional-details",
-                  "saveApiEndPoint":"dde/v1/save-or-update-additional-details",
-                  "validationSchema":{}
-                },
-                "elements":[
-                  {
-                    "component":"textfield",
-                    "apiKey":"noOfYearsInCurrentAddress",
-                    "label":"No. Of Years at Current Address",
-                    "type":"number",
-                    "api":null,
-                    "options":null,
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":null,
-                    "optionToRenderDependentFields":null,
-                    "dependentFields":null,
-                    "validation":{
-                       "required":true,
-                       "minLength":null,
-                       "maxLength":3
-                    }
-                  },
-                  {
-                      "component":"textfield",
-                      "apiKey":"noOfMonthsInCurrentAddress",
-                      "label":"No. Of Months at Current Address",
-                      "type":"number",
-                      "api":null,
-                      "options":null,
-                      "visible":true,
-                      "autoFocus":false,
-                      "prefix":null,
-                      "optionToRenderDependentFields":null,
-                      "dependentFields":null,
-                      "validation":{
-                        "required":true,
-                        "minLength":null,
-                        "maxLength":5
-                      }
-                  },
-                  {
-                    "component":"textfield",
-                    "apiKey":"waMobileNumber",
-                    "label":"Whatsapp Number",
-                    "type":"text",
-                    "api":null,
-                    "options":null,
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":"+91",
-                    "alwaysDisabled":false,
-                    "validation":{"required":true,"minLength":null,"maxLength":10}
-                  },
-                  {
-                    "component":"dropdown",
-                    "apiKey":"educationalQualification",
-                    "label":"Education Qualification",
-                    "type":"dropdown",
-                    "api":"Education Qualification",
-                    "options":null,
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":null,
-                    "optionToRenderDependentFields":null,
-                    "dependentFields":null,
-                    "validation":{"required":false,"minLength":null,"maxLength":null}
-                  },
-                  {
-                    "component":"dropdown",
-                    "apiKey":"religion",
-                    "label":"Religion",
-                    "type":"dropdown",
-                    "api":"Religion",
-                    "options":null,
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":null,
-                    "optionToRenderDependentFields":null,
-                    "dependentFields":null,
-                    "validation":{"required":true,"minLength":null,"maxLength":null}
-                  },
-                  {
-                    "component":"dropdown",
-                    "apiKey":"casteCategory",
-                    "label":"Caste Category",
-                    "type":"dropdown",
-                    "api":"Caste Category",
-                    "options":null,
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":null,
-                    "optionToRenderDependentFields":null,
-                    "dependentFields":null,
-                    "validation":{"required":true,"minLength":null,"maxLength":null}
-                  },
-                  {
-                    "component":"radioButton",
-                    "apiKey":"isCurrentAddressSameAsPermanent",
-                    "label":"Is Current Address Same as Permanent Address",
-                    "type":"radio",
-                    "api":null,
-                    "options":[
-                      {"label":"Yes","value":true},
-                      {"label":"No","value":false}
-                    ],
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":null,
-                    "optionToRestrictDependents":false,
-                    "restrictedLabelDetails":[
-                      {
-                        "component":"label",
-                        "type":"info",
-                        "label":"Current Address Details should be uploaded in mobile application"
-                      }
-                    ],
-                    "optionToRenderDependentFields":false,
-                    "dependentFields":[
-                      {
-                        "component":"image",
-                        "apiKey":"addressProofLink",
-                        "label":"Current Address",
-                        "type":"image",
-                        "api":null,
-                        "options":null,
-                        "visible":true,
-                        "autoFocus":false,
-                        "prefix":null,
-                        "optionToRenderDependentFields":null,
-                        "dependentFields":null,
-                        "validation":{"required":true,"minLength":null,"maxLength":null},
-                        "imageStyle":{"width":"150px","height":"150px","borderRadius":"50%","border":"2px solid #ccc"}
-                      },
-                      {
-                        "component":"textfield",
-                        "apiKey":"houseNumber",
-                        "label":"House Number",
-                        "type":"text",
-                        "api":null,
-                        "options":null,
-                        "visible":true,
-                        "autoFocus":false,
-                        "prefix":null,
-                        "optionToRenderDependentFields":null,
-                        "dependentFields":null,
-                        "validation":{"required":true,"minLength":null,"maxLength":10}
-                      },
-                      {
-                        "component":"textfield",
-                        "apiKey":"street",
-                        "label":"Street",
-                        "type":"text",
-                        "api":null,
-                        "options":null,
-                        "visible":true,
-                        "autoFocus":false,
-                        "prefix":null,
-                        "optionToRenderDependentFields":null,
-                        "dependentFields":null,
-                        "validation":{"required":true,"minLength":null,"maxLength":15}
-                      },
-                      {
-                        "component":"pincode",
-                        "apiKey":"pincode",
-                        "label":"Pincode",
-                        "type":"text",
-                        "api":null,
-                        "options":null,
-                        "visible":true,
-                        "autoFocus":false,
-                        "prefix":null,
-                        "optionToRenderDependentFields":null,
-                        "dependentFields":null,
-                        "validation":{"required":true,"minLength":null,"maxLength":null}
-                      },
-                      {
-                        "component":"dropdown",
-                        "apiKey":"residenceType",
-                        "label":"Residence Type",
-                        "type":"dropdown",
-                        "api":"Residence Type",
-                        "options":null,
-                        "visible":true,
-                        "autoFocus":false,
-                        "prefix":null,
-                        "optionToRenderDependentFields":null,
-                        "dependentFields":null,
-                        "validation":{"required":true,"minLength":null,"maxLength":null}
-                      },
-                      {
-                        "component":"textAreaSmall",
-                        "apiKey":"fullAddress",
-                        "label":"Full Address",
-                        "type":"text",
-                        "api":null,
-                        "options":null,
-                        "visible":true,
-                        "autoFocus":false,
-                        "prefix":null,
-                        "optionToRenderDependentFields":null,
-                        "dependentFields":null,
-                        "alwaysDisabled":true,
-                        "validation":{"required":true,"minLength":null,"maxLength":null}
-                      }
-                    ],
-                    "validation":{"required":true,"minLength":null,"maxLength":null}
-                  },
-                  {
-                    "component":"radioButton",
-                    "apiKey":"isWaNumberSame",
-                    "label":"Previously provide mobile number is same as whatsapp number",
-                    "type":"radio",
-                    "api":null,
-                    "options":[
-                      {"label":"Yes","value":true},
-                      {"label":"No","value":false}
-                    ],
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":null,
-                    "optionToRenderDependentFields":null,
-                    "dependentFields":null,
-                    "alwaysDisabled":false,
-                    "validation":{"required":true,"minLength":null,"maxLength":null}
-                  },
-                ]
-              },
-              {
-                "rbackey":"kyc_details",
-                "sectionName":"KYC Details",
-                "fromPreviousStage":true,
-                "componentName":"KycDetails",
-                "webSectionAttributes":{
-                  "fetchApiEndPoint":"dde/v1/fetch-additional-details",
-                  "saveApiEndPoint":"dde/v1/save-or-update-additional-details",
-                  "validationSchema":{}
-                },
-                "elements": [
-                  {
-                    "component":"textAreaSmall",
-                    "apiKey":"kyc_Address",
-                    "label":"Full Address",
-                    "type":"text",
-                    "api":null,
-                    "options":null,
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":null,
-                    "optionToRenderDependentFields":null,
-                    "dependentFields":null,
-                    "alwaysDisabled":false,
-                    "validation":{
-                       "required":true,
-                       "minLength":null,
-                       "maxLength":null
-                    }
-                 }
-                ]
-              },
-              {
-                "rbackey":"bureau_report",
-                "sectionName":"Bureau Report",
-                "fromPreviousStage":true,
-                "componentName":"BeuroReport",
-                "elements": []
-              },
-              {
-                "rbackey":"personal_details",
-                "sectionName":"Personal Details",
-                "fromPreviousStage":true,
-                "componentName":"PersonalDetails",
-                "elements": []
-              },
-            ]
-          },
-          {
-            "rbackey":"application_details",
-            "tabName":"Application Details",
-            "staticPage":false,
-            "profileCardData":false,
-            "sections":[
-              {
-                "rbackey":"agricultural_details",
-                "sectionName":"Agricultural Details",
-                "fromPreviousStage":true,
-                "componentName":null,
-                "webSectionAttributes":{
-                  "fetchApiEndPoint":"dde/v1/fetch-agricultural-details",
-                  "saveApiEndPoint":"dde/v1/save-or-update-Agricultural-details",
-                  "validationSchema":{}
-                },
-                "elements":[
-                  {
-                    "component":"textfield",
-                    "apiKey":"noOfMilkSoldToDairy",
-                    "label":"No Of Litres Milk Sold Daily To Dairy(In Litres)",
-                    "type":"number",
-                    "api":null,
-                    "options":null,
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":null,
-                    "optionToRenderDependentFields":null,
-                    "dependentFields":null,
-                    "validation":{
-                       "required":true,
-                       "minLength":null,
-                       "maxLength":4
-                    }
-                 },
-                 {
-                    "component":"textfield",
-                    "apiKey":"avgPerLitreMilkPrice",
-                    "label":"Avg. Per Litre Milk Price",
-                    "type":"number",
-                    "api":null,
-                    "options":null,
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":"₹",
-                    "optionToRenderDependentFields":null,
-                    "dependentFields":null,
-                    "validation":{
-                       "required":true,
-                       "minLength":null,
-                       "maxLength":3
-                    }
-                 },
-                 {
-                    "component":"textfield",
-                    "apiKey":"vintageDairyBusinessMonths",
-                    "label":"Vintage In Dairy Business (In Months)",
-                    "type":"number",
-                    "api":null,
-                    "options":null,
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":null,
-                    "optionToRenderDependentFields":null,
-                    "dependentFields":null,
-                    "validation":{
-                       "required":true,
-                       "minLength":null,
-                       "maxLength":5
-                    }
-                 },
-                 {
-                    "component":"dropdown",
-                    "apiKey":"milkPaymentFrequency",
-                    "label":"Milk Payment Frequency",
-                    "type":"dropdown",
-                    "api":"Milk Payment Frequency",
-                    "options":null,
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":null,
-                    "optionToRenderDependentFields":null,
-                    "dependentFields":null,
-                    "validation":{
-                       "required":true,
-                       "minLength":null,
-                       "maxLength":null
-                    }
-                 },
-                 {
-                    "component":"dropdown",
-                    "apiKey":"proposedCattleType",
-                    "label":"Proposed Cattle Type",
-                    "type":"dropdown",
-                    "api":"Proposed Cattle Type",
-                    "options":null,
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":null,
-                    "optionToRenderDependentFields":null,
-                    "dependentFields":null,
-                    "validation":{
-                       "required":true,
-                       "minLength":null,
-                       "maxLength":null
-                    }
-                 },
-                 {
-                    "component":"textfield",
-                    "apiKey":"noOfMilchingCattle",
-                    "label":"No Of Proposed Milching Cattle",
-                    "type":"number",
-                    "api":null,
-                    "options":null,
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":null,
-                    "optionToRenderDependentFields":null,
-                    "dependentFields":null,
-                    "validation":{
-                       "required":true,
-                       "minLength":null,
-                       "maxLength":3
-                    }
-                 },
-                 {
-                    "component":"radioButton",
-                    "apiKey":"waterAvailability",
-                    "label":"Water Availability",
-                    "type":"radio",
-                    "api":null,
-                    "options":[
-                       {
-                          "label":"Yes",
-                          "value":true
-                       },
-                       {
-                          "label":"No",
-                          "value":false
-                       }
-                    ],
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":null,
-                    "optionToRenderDependentFields":null,
-                    "dependentFields":null,
-                    "validation":{
-                       "required":false,
-                       "minLength":null,
-                       "maxLength":null
-                    }
-                 },
-                 {
-                    "component":"radioButton",
-                    "apiKey":"cattleEffectedByDisease1Y",
-                    "label":"Existing Cattle Affected By Any Disease In 1 Yr.",
-                    "type":"radio",
-                    "api":null,
-                    "options":[
-                       {
-                          "label":"Yes",
-                          "value":true
-                       },
-                       {
-                          "label":"No",
-                          "value":false
-                       }
-                    ],
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":null,
-                    "optionToRenderDependentFields":null,
-                    "dependentFields":null,
-                    "validation":{
-                       "required":false,
-                       "minLength":null,
-                       "maxLength":null
-                    }
-                 },
-                 {
-                    "component":"radioButton",
-                    "apiKey":"insuranceForCattle",
-                    "label":"Insurance For Existing Cattle Done?",
-                    "type":"radio",
-                    "api":null,
-                    "options":[
-                       {
-                          "label":"Yes",
-                          "value":true
-                       },
-                       {
-                          "label":"No",
-                          "value":false
-                       }
-                    ],
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":null,
-                    "optionToRenderDependentFields":null,
-                    "dependentFields":null,
-                    "validation":{
-                       "required":false,
-                       "minLength":null,
-                       "maxLength":null
-                    }
-                 },
-                 {
-                    "component":"radioButton",
-                    "apiKey":"cattleShed",
-                    "label":"Cattle shed Available?",
-                    "type":"radio",
-                    "api":null,
-                    "options":[
-                       {
-                          "label":"Yes",
-                          "value":true
-                       },
-                       {
-                          "label":"No",
-                          "value":false
-                       }
-                    ],
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":null,
-                    "optionToRenderDependentFields":null,
-                    "dependentFields":null,
-                    "validation":{
-                       "required":false,
-                       "minLength":null,
-                       "maxLength":null
-                    }
-                 },
-                 {
-                    "component":"radioButton",
-                    "apiKey":"milkPaymentMode",
-                    "label":"Milk Payment Mode",
-                    "type":"radio",
-                    "api":null,
-                    "options":[
-                       {
-                          "label":"Cash",
-                          "value":"Cash"
-                       },
-                       {
-                          "label":"Bank",
-                          "value":"Bank"
-                       }
-                    ],
-                    "visible":true,
-                    "autoFocus":false,
-                    "prefix":null,
-                    "optionToRenderDependentFields":null,
-                    "dependentFields":null,
-                    "validation":{
-                       "required":true,
-                       "minLength":null,
-                       "maxLength":null
-                    }
-                 }
-                ]
-              }
-            ]
-          },
-          {
-            "rbackey":"field_investigation",
-            "tabName":"Field Investigation",
-            "staticPage":false,
-            "profileCardData":false,
-            "sections":[
-              {
-                "rbackey":"capture_details",
-                "sectionName":"Capture Details",
-                "fromPreviousStage":false,
-                "componentName":null,
-                "elements":[
-                  {
-                    "component":"dynamicImages",
-                    "apiKey":"House Picture",
-                    "label":"House Picture",
-                    "type":"image",
-                    "visible":true
-                  },
-                  {
-                    "component":"LocationComponnet",
-                    "apiKey":"currentLocation",
-                    "label":"Current Location",
-                    "visible":true,
-                    "validation":{"required":true,"minLength":null,"maxLength":null}
-                  },
-                ]
-              }
-            ]
-          }
-        ]
+/**
+ * HTTP Client Configuration
+ */
+class HttpClient {
+  constructor(baseURL, timeout = 10000) {
+    this.client = axios.create({
+      baseURL,
+      timeout,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    this.setupInterceptors();
+  }
+
+  setupInterceptors() {
+    // Request interceptor
+    this.client.interceptors.request.use(
+      (config) => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        
+        // Add request ID for tracking
+        config.metadata = { startTime: new Date() };
+        
+        logger.info('API Request', {
+          method: config.method?.toUpperCase(),
+          url: config.url,
+          params: config.params
+        });
+
+        return config;
+      },
+      (error) => {
+        logger.error('Request interceptor error', error);
+        return Promise.reject(new NetworkError('Request configuration failed'));
       }
-   }
-};
+    );
 
-// Mock dropdown options
-const MOCK_DROPDOWN_OPTIONS = {
-  "Education Qualification": [
-    { label: "High School", value: "high_school" },
-    { label: "Bachelor's Degree", value: "bachelors" },
-    { label: "Master's Degree", value: "masters" },
-    { label: "PhD", value: "phd" }
-  ],
-  "Religion": [
-    { label: "Hindu", value: "hindu" },
-    { label: "Muslim", value: "muslim" },
-    { label: "Christian", value: "christian" },
-    { label: "Sikh", value: "sikh" },
-    { label: "Other", value: "other" }
-  ],
-  "Caste Category": [
-    { label: "General", value: "general" },
-    { label: "OBC", value: "obc" },
-    { label: "SC", value: "sc" },
-    { label: "ST", value: "st" }
-  ],
-  "Residence Type": [
-    { label: "Own House", value: "own_house" },
-    { label: "Rented", value: "rented" },
-    { label: "Family House", value: "family_house" }
-  ],
-  "Name of Crop Owned by Farmer": [
-    { label: "Rice", value: "rice" },
-    { label: "Wheat", value: "wheat" },
-    { label: "Cotton", value: "cotton" },
-    { label: "Sugarcane", value: "sugarcane" }
-  ]
-};
+    // Response interceptor
+    this.client.interceptors.response.use(
+      (response) => {
+        const duration = new Date() - response.config.metadata.startTime;
+        
+        logger.info('API Response', {
+          method: response.config.method?.toUpperCase(),
+          url: response.config.url,
+          status: response.status,
+          duration: `${duration}ms`
+        });
 
-export const APPLICATION_DATA_PROFILE = {
-  name: "Ganesh Jange",
-  phone: "+91 9769797997",
-  applicationId: "ISFL000001067",
-  customerId: "NA",
-  avatar: null
-};
+        return response;
+      },
+      (error) => {
+        const duration = error.config?.metadata ? 
+          new Date() - error.config.metadata.startTime : 0;
 
-// Create axios instance
-const api = axios.create({
-  // baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:3001/api',
-  baseURL: 'http://localhost:3001/api',
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+        logger.error('API Error', {
+          method: error.config?.method?.toUpperCase(),
+          url: error.config?.url,
+          status: error.response?.status,
+          duration: `${duration}ms`,
+          message: error.message
+        });
 
-// Request interceptor
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+        return this.handleError(error);
+      }
+    );
+  }
+
+  handleError(error) {
+    if (error.response) {
+      const { status, data } = error.response;
+      
+      switch (status) {
+        case 401:
+          localStorage.removeItem('authToken');
+          window.location.href = '/login';
+          return Promise.reject(new ApiError('Unauthorized access', 401));
+        
+        case 403:
+          return Promise.reject(new ApiError('Forbidden access', 403));
+        
+        case 404:
+          return Promise.reject(new ApiError('Resource not found', 404));
+        
+        case 422:
+          return Promise.reject(new ValidationError('Validation failed', data.errors));
+        
+        case 500:
+          return Promise.reject(new ApiError('Internal server error', 500));
+        
+        default:
+          return Promise.reject(new ApiError(
+            data?.message || 'An error occurred', 
+            status
+          ));
+      }
     }
-    return config;
-  },
-  (error) => {
+    
+    if (error.code === 'ECONNABORTED') {
+      return Promise.reject(new NetworkError('Request timeout'));
+    }
+    
+    if (!error.response) {
+      return Promise.reject(new NetworkError('Network error'));
+    }
+    
     return Promise.reject(error);
   }
-);
 
-// Response interceptor
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('authToken');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
+  async get(url, params = {}) {
+    const response = await this.client.get(url, { params });
+    return response.data;
   }
-);
 
-// API functions
-export const fetchConfig = async () => {
-  try {
-    // For now, return mock data. Replace with actual API call later
-    // const response = await api.get('/config');
-    // return response.data;
-    
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return MOCK_CONFIG;
-  } catch (error) {
-    console.error('Error fetching config:', error);
-    throw new Error('Failed to fetch configuration');
+  async post(url, data = {}) {
+    const response = await this.client.post(url, data);
+    return response.data;
   }
-};
 
-// export const fetchApplicationData = async () => {
-//   try {
-//     // For now, return mock data. Replace with actual API call later
-//     // const response = await api.get('/profile');
-//     // return response.data;
-    
-//     // Simulate API delay
-//     await new Promise(resolve => setTimeout(resolve, 500));
-//     return APPLICATION_DATA_PROFILE;
-//   } catch (error) {
-//     console.error('Error fetching config:', error);
-//     throw new Error('Failed to fetch configuration');
-//   }
-// };
-
-export const fetchDropdownOptions = async (apiKey) => {
-  try {
-    // For now, return mock data. Replace with actual API call later
-    // const response = await api.get(`/dropdown-options/${apiKey}`);
-    // return response.data;
-    
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return MOCK_DROPDOWN_OPTIONS[apiKey] || [];
-  } catch (error) {
-    console.error('Error fetching dropdown options:', error);
-    throw new Error(`Failed to fetch options for ${apiKey}`);
+  async put(url, data = {}) {
+    const response = await this.client.put(url, data);
+    return response.data;
   }
-};
 
-export const fetchSectionData = async (endpoint, params = {}) => {
-  try {
-    // const response = await api.get(endpoint, { params });
-    // return response.data;
-    
-    // Mock response for now
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return { data: {} };
-  } catch (error) {
-    console.error('Error fetching section data:', error);
-    throw new Error('Failed to fetch section data');
+  async delete(url) {
+    const response = await this.client.delete(url);
+    return response.data;
   }
-};
 
-export const saveSectionData = async (endpoint, data) => {
-  try {
-    // const response = await api.post(endpoint, data);
-    // return response.data;
-    
-    // Mock response for now
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return { success: true, message: 'Data saved successfully' };
-  } catch (error) {
-    console.error('Error saving section data:', error);
-    throw new Error('Failed to save section data');
-  }
-};
-
-export const uploadFile = async (file, endpoint = '/upload') => {
-  try {
+  async upload(url, file, onProgress = null) {
     const formData = new FormData();
     formData.append('file', file);
     
-    // const response = await api.post(endpoint, formData, {
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data',
-    //   },
-    // });
-    // return response.data;
+    const response = await this.client.post(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress: onProgress ? (progressEvent) => {
+        const percentCompleted = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        onProgress(percentCompleted);
+      } : undefined,
+    });
     
-    // Mock response for now
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    return { 
-      success: true, 
-      fileUrl: URL.createObjectURL(file),
-      fileName: file.name 
-    };
-  } catch (error) {
-    console.error('Error uploading file:', error);
-    throw new Error('Failed to upload file');
+    return response.data;
   }
-};
+}
 
-export default api;
+/**
+ * Base API Service
+ */
+class BaseApiService {
+  constructor(httpClient) {
+    this.http = httpClient;
+    this.useMockData = CONFIG.USE_MOCK_DATA;
+  }
+
+  async simulateDelay(ms = 500) {
+    if (this.useMockData) {
+      await new Promise(resolve => setTimeout(resolve, ms));
+    }
+  }
+}
+
+/**
+ * Configuration Service
+ */
+class ConfigService extends BaseApiService {
+  async fetchConfig() {
+    try {
+      if (this.useMockData) {
+        await this.simulateDelay(1000);
+        return MOCK_DATA.CONFIG;
+      }
+
+      return await this.http.get('/config');
+    } catch (error) {
+      logger.error('Failed to fetch configuration', error);
+      throw new ApiError('Failed to fetch configuration');
+    }
+  }
+
+  async fetchDropdownOptions(apiKey) {
+    try {
+      if (this.useMockData) {
+        await this.simulateDelay(500);
+        return MOCK_DATA.DROPDOWN_OPTIONS[apiKey] || [];
+      }
+
+      return await this.http.get(`/dropdown-options/${apiKey}`);
+    } catch (error) {
+      logger.error(`Failed to fetch dropdown options for ${apiKey}`, error);
+      throw new ApiError(`Failed to fetch options for ${apiKey}`);
+    }
+  }
+}
+
+/**
+ * Section Data Service
+ */
+class SectionService extends BaseApiService {
+  async fetchSectionData(endpoint, params = {}) {
+    try {
+      if (this.useMockData) {
+        await this.simulateDelay(500);
+        return { data: {} };
+      }
+
+      return await this.http.get(endpoint, params);
+    } catch (error) {
+      logger.error('Failed to fetch section data', error);
+      throw new ApiError('Failed to fetch section data');
+    }
+  }
+
+  async saveSectionData(endpoint, data) {
+    try {
+      if (this.useMockData) {
+        await this.simulateDelay(1000);
+        return { success: true, message: 'Data saved successfully' };
+      }
+
+      return await this.http.post(endpoint, data);
+    } catch (error) {
+      logger.error('Failed to save section data', error);
+      throw new ApiError('Failed to save section data');
+    }
+  }
+}
+
+/**
+ * File Upload Service
+ */
+class FileService extends BaseApiService {
+  async uploadFile(file, endpoint = '/upload', onProgress = null) {
+    try {
+      if (this.useMockData) {
+        await this.simulateDelay(2000);
+        return {
+          success: true,
+          fileUrl: URL.createObjectURL(file),
+          fileName: file.name,
+          fileSize: file.size,
+          fileType: file.type
+        };
+      }
+
+      return await this.http.upload(endpoint, file, onProgress);
+    } catch (error) {
+      logger.error('Failed to upload file', error);
+      throw new ApiError('Failed to upload file');
+    }
+  }
+
+  async deleteFile(fileId) {
+    try {
+      if (this.useMockData) {
+        await this.simulateDelay(500);
+        return { success: true, message: 'File deleted successfully' };
+      }
+
+      return await this.http.delete(`/files/${fileId}`);
+    } catch (error) {
+      logger.error('Failed to delete file', error);
+      throw new ApiError('Failed to delete file');
+    }
+  }
+}
+
+/**
+ * Application Service
+ */
+class ApplicationService extends BaseApiService {
+  async fetchApplicationProfile() {
+    try {
+      if (this.useMockData) {
+        await this.simulateDelay(500);
+        return MOCK_DATA.APPLICATION_PROFILE;
+      }
+
+      return await this.http.get('/application/profile');
+    } catch (error) {
+      logger.error('Failed to fetch application profile', error);
+      throw new ApiError('Failed to fetch application profile');
+    }
+  }
+}
+
+/**
+ * API Factory - Singleton Pattern
+ */
+class ApiFactory {
+  constructor() {
+    if (ApiFactory.instance) {
+      return ApiFactory.instance;
+    }
+
+    this.httpClient = new HttpClient(CONFIG.API_BASE_URL, CONFIG.API_TIMEOUT);
+    this.configService = new ConfigService(this.httpClient);
+    this.sectionService = new SectionService(this.httpClient);
+    this.fileService = new FileService(this.httpClient);
+    this.applicationService = new ApplicationService(this.httpClient);
+
+    ApiFactory.instance = this;
+  }
+
+  getConfigService() {
+    return this.configService;
+  }
+
+  getSectionService() {
+    return this.sectionService;
+  }
+
+  getFileService() {
+    return this.fileService;
+  }
+
+  getApplicationService() {
+    return this.applicationService;
+  }
+
+  getHttpClient() {
+    return this.httpClient;
+  }
+}
+
+// Create singleton instance
+const apiFactory = new ApiFactory();
+
+// Export service instances
+export const configService = apiFactory.getConfigService();
+export const sectionService = apiFactory.getSectionService();
+export const fileService = apiFactory.getFileService();
+export const applicationService = apiFactory.getApplicationService();
+
+// Export legacy functions for backward compatibility
+export const fetchConfig = () => configService.fetchConfig();
+export const fetchDropdownOptions = (apiKey) => configService.fetchDropdownOptions(apiKey);
+export const fetchSectionData = (endpoint, params) => sectionService.fetchSectionData(endpoint, params);
+export const saveSectionData = (endpoint, data) => sectionService.saveSectionData(endpoint, data);
+export const uploadFile = (file, endpoint, onProgress) => fileService.uploadFile(file, endpoint, onProgress);
+
+// Export application profile data for backward compatibility
+export const APPLICATION_DATA_PROFILE = MOCK_DATA.APPLICATION_PROFILE;
+
+// Export default HTTP client
+export default apiFactory.getHttpClient();
